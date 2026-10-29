@@ -44,3 +44,7 @@ h2::after{content:"";flex:1;height:3px;border-radius:3px;background:linear-gradi
 #play{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:50%;border:0;background:var(--teal);color:#fff;font-size:30px;padding-left:6px;cursor:pointer;display:none}
 #play.show{display:block}
 @media(prefers-reduced-motion:reduce){#intro,#hero #logo,#hero .hours,#hero .go{transition:none}}
+
+/* returning visitors in the same session skip the intro */
+.seen #intro{display:none}
+.seen #hero #logo,.seen #hero .hours,.seen #hero .go{opacity:1;transform:none;transition:none}

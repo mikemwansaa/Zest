@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>try{if(sessionStorage.getItem('zestIntroSeen'))document.documentElement.classList.add('seen')}catch(e){}</script>
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search);</script>
 </head>
 <body>
@@ -25,17 +26,18 @@
 <script>
 scrollTo(0,0);
 const hero=document.getElementById('hero'),v=document.getElementById('v'),playBtn=document.getElementById('play');
-const done=()=>{hero.classList.add('done');playBtn.classList.remove('show')};
+const root=document.documentElement,seen=root.classList.contains('seen');
+const done=()=>{hero.classList.add('done');playBtn.classList.remove('show');try{sessionStorage.setItem('zestIntroSeen','1')}catch(e){}};
 v.muted=true;v.defaultMuted=true;
 const start=()=>{const p=v.play();if(p&&p.catch)p.catch(()=>{})};
 v.addEventListener('playing',()=>playBtn.classList.remove('show'));
 v.addEventListener('ended',done);v.addEventListener('error',done);
-v.addEventListener('timeupdate',()=>{if(v.duration&&v.currentTime>v.duration-0.5)done()});
-v.addEventListener('canplay',start);start();
+v.addEventListener('timeupdate',()=>{if(v.duration&&v.currentTime>v.duration-0.3)done()});
+if(seen){v.removeAttribute('autoplay');v.pause();hero.classList.add('done')}else{v.addEventListener('canplay',start);start()}
 ['pointerdown','touchstart','keydown'].forEach(e=>addEventListener(e,()=>{if(v.paused&&!hero.classList.contains('done')&&v.currentTime===0)start()},{passive:true}));
 setTimeout(()=>{if(v.paused&&!hero.classList.contains('done'))playBtn.classList.add('show')},1200);
 playBtn.onclick=start;
-document.getElementById('logo').onclick=()=>{hero.classList.remove('done');v.currentTime=0;start()};
+document.getElementById('logo').onclick=()=>{root.classList.remove('seen');hero.classList.remove('done');v.currentTime=0;start()};
 document.querySelector('.go').addEventListener('click',e=>{e.preventDefault();document.getElementById('tabs').scrollIntoView({behavior:'smooth'})});
 const links=[...document.querySelectorAll('#tabs a')],secs=[...document.querySelectorAll('.sec')];
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+x.target.id));const a=document.querySelector('#tabs a.on');if(a)a.scrollIntoView({inline:'center',block:'nearest'})}}),{rootMargin:'-30% 0px -65% 0px'});
