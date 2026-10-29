@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zest Bar and Restaurant - Menu</title>
+<meta name="description" content="Zest Bar and Restaurant - Menu">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search);</script>
+</head>
+<body>
+<header id="hero">
+<span class="blob b1"></span><span class="blob b2"></span>
+<img src="img/logo.jpeg" alt="Zest Bar and Restaurant">
+<p class="hours">Open daily 10:30 - midnight &middot; Livingstone 0978 109 392 / 0777 753 033</p>
+<a class="go" href="#menu">View the menu</a>
+</header>
+<nav id="tabs" aria-label="Menu sections"></nav>
+<main id="menu"></main>
+<script src="menu.js"></script>
+<script>
+scrollTo(0,0);
+document.querySelector('.go').addEventListener('click',e=>{e.preventDefault();document.getElementById('tabs').scrollIntoView({behavior:'smooth'})});
+const links=[...document.querySelectorAll('#tabs a')],secs=[...document.querySelectorAll('.sec')];
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+x.target.id));const a=document.querySelector('#tabs a.on');if(a)a.scrollIntoView({inline:'center',block:'nearest'})}}),{rootMargin:'-30% 0px -65% 0px'});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
