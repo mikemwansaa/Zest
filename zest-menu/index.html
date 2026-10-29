@@ -13,8 +13,9 @@
 </head>
 <body>
 <header id="hero">
+<div id="intro"><video id="v" autoplay muted playsinline webkit-playsinline preload="auto" poster="img/poster.jpg" src="video/zest-intro.mp4"></video><button id="play" type="button" aria-label="Play intro">&#9654;</button></div>
 <span class="blob b1"></span><span class="blob b2"></span>
-<img src="img/logo.jpeg" alt="Zest Bar and Restaurant">
+<img id="logo" src="img/logo.jpeg" alt="Zest Bar and Restaurant - tap to replay intro" title="Replay intro">
 <p class="hours">Open daily 10:30 - midnight &middot; Livingstone 0978 109 392 / 0777 753 033</p>
 <a class="go" href="#menu">View the menu</a>
 </header>
@@ -23,6 +24,18 @@
 <script src="menu.js"></script>
 <script>
 scrollTo(0,0);
+const hero=document.getElementById('hero'),v=document.getElementById('v'),playBtn=document.getElementById('play');
+const done=()=>{hero.classList.add('done');playBtn.classList.remove('show')};
+v.muted=true;v.defaultMuted=true;
+const start=()=>{const p=v.play();if(p&&p.catch)p.catch(()=>{})};
+v.addEventListener('playing',()=>playBtn.classList.remove('show'));
+v.addEventListener('ended',done);v.addEventListener('error',done);
+v.addEventListener('timeupdate',()=>{if(v.duration&&v.currentTime>v.duration-0.5)done()});
+v.addEventListener('canplay',start);start();
+['pointerdown','touchstart','keydown'].forEach(e=>addEventListener(e,()=>{if(v.paused&&!hero.classList.contains('done')&&v.currentTime===0)start()},{passive:true}));
+setTimeout(()=>{if(v.paused&&!hero.classList.contains('done'))playBtn.classList.add('show')},1200);
+playBtn.onclick=start;
+document.getElementById('logo').onclick=()=>{hero.classList.remove('done');v.currentTime=0;start()};
 document.querySelector('.go').addEventListener('click',e=>{e.preventDefault();document.getElementById('tabs').scrollIntoView({behavior:'smooth'})});
 const links=[...document.querySelectorAll('#tabs a')],secs=[...document.querySelectorAll('.sec')];
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+x.target.id));const a=document.querySelector('#tabs a.on');if(a)a.scrollIntoView({inline:'center',block:'nearest'})}}),{rootMargin:'-30% 0px -65% 0px'});
